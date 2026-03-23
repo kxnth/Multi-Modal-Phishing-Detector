@@ -33,7 +33,7 @@ model = Model(inputs=base_model.input, outputs=predictions)
 model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
               loss='binary_crossentropy', metrics=['accuracy'])
 
-# 4. Class Weights (Balances 1147 Safe vs 550 Phishing)
+# 4. Class Weights
 weights = {0: 0.74, 1: 1.54} 
 
 print("Training Vision Model...")

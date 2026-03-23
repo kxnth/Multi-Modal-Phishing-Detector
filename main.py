@@ -52,14 +52,11 @@ div[data-baseweb="textarea"], div[data-baseweb="textarea"] > textarea,
 from capture import get_screenshot
 from detector import analyze_phishing
 
-# Hero
 st.markdown('<h1 style="text-align: center; color: #ffffff;">PhishGuard AI</h1>', unsafe_allow_html=True)
 st.markdown('<p style="text-align: center; color: #ffffff; margin-bottom: 30px;">Advance scanner for Phishing emails / links • Powered by AI</p>', unsafe_allow_html=True)
 
-# Main Form
 with st.form("scan_form"):
     
-    # Clickable Instructions Header & Text
     st.markdown("""
     <details style="margin-bottom: 20px; cursor: pointer;">
         <summary style="display: flex; justify-content: center; list-style: none;">
@@ -82,7 +79,6 @@ with st.form("scan_form"):
     st.markdown('🔗 Check Link / URL')
     url_text = st.text_area("url", label_visibility="collapsed")
     
-    # Centered Submit Button using Columns
     col1, col2, col3 = st.columns([1, 1.5, 1])
     with col2:
         scan_clicked = st.form_submit_button("Scan using AI", use_container_width=True)
@@ -101,7 +97,6 @@ if scan_clicked:
         elif "SUSPICIOUS" in v: bg_color, border = "#fff8e1", "#f39c12"
         else: bg_color, border = "#ffebee", "#e74c3c"
 
-        # Result Box (Left Aligned)
         st.markdown(f"""
         <div style="background: {bg_color}; border: 1px solid {border}; border-left: 8px solid {border}; border-radius: 8px; padding: 15px; margin-bottom: 20px; color: #000; text-align: left;">
             <div style="font-weight: bold; font-size: 1.1rem; margin-bottom: 5px;">{verdict}</div>
@@ -109,7 +104,6 @@ if scan_clicked:
         </div>
         """, unsafe_allow_html=True)
 
-        # Single Screenshot Box via Base64 HTML injection
         img_html = '<div style="height: 300px; background: #ffffff;"></div>'
         if image_path and os.path.exists(image_path):
             with open(image_path, "rb") as img_file:

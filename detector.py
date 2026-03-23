@@ -29,9 +29,6 @@ def analyze_phishing(email_text, image_path):
     weight_nlp = 0.80
     weight_vision = 0.20
     
-    # 🛡️ THE FIX: If NLP is highly confident it's safe (< 25% risk), 
-    # but Vision is panicking (> 75% risk), Vision is likely looking at a complex UI (like YouTube).
-    # We dynamically reduce Vision's authority to prevent a false positive.
     if nlp_prob < 0.25 and vision_prob > 0.75:
         weight_nlp = 0.95
         weight_vision = 0.05
