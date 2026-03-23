@@ -1,0 +1,9 @@
+venv/
+models/
+dataset/
+results/
+data/
+__pycache__/
+*.pkl
+*.keras
+*.png
