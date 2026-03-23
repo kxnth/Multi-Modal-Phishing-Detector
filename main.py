@@ -49,12 +49,8 @@ div[data-baseweb="textarea"], div[data-baseweb="textarea"] > textarea,
 </style>
 """, unsafe_allow_html=True)
 
-try:
-    from capture import get_screenshot
-    from detector import analyze_phishing
-except ImportError:
-    def get_screenshot(url): return None
-    def analyze_phishing(email_text, image_path): return "NLP: 46.1% | Vision: 57.0% | Fusion: 48.3%", "✅ SAFE"
+from capture import get_screenshot
+from detector import analyze_phishing
 
 # Hero
 st.markdown('<h1 style="text-align: center; color: #ffffff;">PhishGuard AI</h1>', unsafe_allow_html=True)

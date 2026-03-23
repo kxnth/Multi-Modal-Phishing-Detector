@@ -25,8 +25,18 @@ def analyze_phishing(email_text, image_path):
     img_array = np.expand_dims(img_array, axis=0)
     vision_prob = float(vision_model.predict(img_array, verbose=0)[0][0])
 
-    # 4. Fusion Math (80% Text / 20% Vision)
-    combined_score = (nlp_prob * 0.80) + (vision_prob * 0.20)
+    # 4. Dynamic Fusion Math (Confidence-Based Veto)
+    weight_nlp = 0.80
+    weight_vision = 0.20
+    
+    # 🛡️ THE FIX: If NLP is highly confident it's safe (< 25% risk), 
+    # but Vision is panicking (> 75% risk), Vision is likely looking at a complex UI (like YouTube).
+    # We dynamically reduce Vision's authority to prevent a false positive.
+    if nlp_prob < 0.25 and vision_prob > 0.75:
+        weight_nlp = 0.95
+        weight_vision = 0.05
+        
+    combined_score = (nlp_prob * weight_nlp) + (vision_prob * weight_vision)
     
     # 5. Final Verdict Logic
     if combined_score > 0.85:
@@ -36,5 +46,6 @@ def analyze_phishing(email_text, image_path):
     else:
         verdict = "✅ SAFE"
         
+    # Formatting the output for the Streamlit UI
     report = f"**NLP:** {nlp_prob*100:.1f}% | **Vision:** {vision_prob*100:.1f}% | **Fusion:** {combined_score*100:.1f}%"
     return report, verdict
