@@ -10,7 +10,6 @@ Analyzes emails and linked URLs using DistilBERT and MobileNetV2.
 ## Run Instructions
 **Clone the repository:**
    git clone https://github.com/kxnth/Multi-Modal-Phishing-Detector
-   cd [INSERT_YOUR_FOLDER_NAME_HERE]
 
 Create and activate a virtual environment:
 # Windows
