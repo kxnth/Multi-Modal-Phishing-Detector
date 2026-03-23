@@ -1,12 +1,19 @@
 # Multi-Modal Phishing Detector
-Analyzes emails and linked URLs using DistilBERT and MobileNetV2.
+Advance AI scanner for Phishing emails and links using Late Fusion (DistilBERT + MobileNetV2).
 
-## Structure
-- `/data`: CSVs and images (Stored locally due to GitHub file size limits)
-- `/models`: Saved `.keras` and BERT files (Stored locally due to GitHub file size limits)
-- `/src`: Python scripts
-- `/docs`: Reports and matrices
+## 🚀 System Requirements
+* **Python 3.10+**
+* **Google Chrome:** Required for automated URL screenshot capture (Selenium).
+* **Git LFS:** Required to pull the large model and dataset files.
 
-## Run Instructions
-1. `pip install -r requirements.txt`
-2. `streamlit run main.py`
+## 📂 Project Structure
+- `/data`: CSV datasets and training images (Tracked via Git LFS).
+- `/models`: Saved `.keras` and DistilBERT weights (Tracked via Git LFS).
+- `/src`: Core logic for NLP, Vision, and Fusion models.
+- `/docs`: Performance matrices and technical reports.
+
+## 🛠️ Installation & Setup
+1. **Clone the Repository** (Do NOT download as ZIP, or models will be missing):
+   ```bash
+   git clone [https://github.com/your-username/your-repo-name.git](https://github.com/your-username/your-repo-name.git)
+   cd your-repo-name
