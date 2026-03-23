@@ -9,4 +9,4 @@ Analyzes emails and linked URLs using DistilBERT and MobileNetV2.
 
 ## Run Instructions
 1. `pip install -r requirements.txt`
-2. `streamlit run src/main.py`
+2. `streamlit run main.py`
