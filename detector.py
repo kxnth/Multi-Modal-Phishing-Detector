@@ -7,10 +7,10 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 
 # 1. Load Models Globally
-model_path = os.path.abspath("nlp_model_bert")
-tokenizer = DistilBertTokenizer.from_pretrained(model_path, local_files_only=True)
-nlp_model = DistilBertForSequenceClassification.from_pretrained(model_path, local_files_only=True)
-vision_model = load_model("vision_model.keras")
+nlp_path = "models/nlp_model_bert"
+tokenizer = DistilBertTokenizer.from_pretrained(nlp_path, local_files_only=True)
+nlp_model = DistilBertForSequenceClassification.from_pretrained(nlp_path, local_files_only=True)
+vision_model = load_model("models/vision_model.keras")
 
 def analyze_phishing(email_text, image_path):
     # 2. NLP Score (BERT)
