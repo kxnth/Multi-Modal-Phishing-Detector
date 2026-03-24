@@ -2,9 +2,9 @@ venv/
 models/
 dataset/
 results/
-results-nlp/
 data/
 __pycache__/
 *.pkl
 *.keras
 *.png
+results_nlp/
