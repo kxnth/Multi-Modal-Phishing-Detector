@@ -11,7 +11,7 @@ Analyzes emails and linked URLs using DistilBERT and MobileNetV2.
 **Clone the repository:**
    git clone https://github.com/kxnth/Multi-Modal-Phishing-Detector
 
-Create and activate a virtual environment:
+Create venv:
 # Windows
 python -m venv venv
 .\venv\Scripts\activate

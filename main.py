@@ -49,8 +49,8 @@ div[data-baseweb="textarea"], div[data-baseweb="textarea"] > textarea,
 </style>
 """, unsafe_allow_html=True)
 
-from capture import get_screenshot
-from detector import analyze_phishing
+from utils.capture import get_screenshot
+from utils.detector import analyze_phishing
 
 st.markdown('<h1 style="text-align: center; color: #ffffff;">PhishGuard AI</h1>', unsafe_allow_html=True)
 st.markdown('<p style="text-align: center; color: #ffffff; margin-bottom: 30px;">Advance scanner for Phishing emails / links • Powered by AI</p>', unsafe_allow_html=True)
