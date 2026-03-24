@@ -1,12 +1,13 @@
 import os
 
-base_path = 'dataset'
+# Updated path based on the new folder structure
+base_path = 'dataset/images'
 categories = ['safe', 'phishing']
 
 for cat in categories:
     path = os.path.join(base_path, cat)
     if not os.path.exists(path):
-        print(f"Error: {path} not found!")
+        print(f"Error: {path} not found! Did you put the folders inside dataset/images/?")
         continue
         
     files = [f for f in os.listdir(path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp'))]

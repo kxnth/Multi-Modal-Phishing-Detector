@@ -3,6 +3,10 @@ from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
 from tensorflow.keras.models import Model
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import os
+
+# 🚨 FIX: Point to the exact images folder
+image_dir = 'dataset/images'
 
 # 1. Data Augmentation
 datagen = ImageDataGenerator(
@@ -11,12 +15,12 @@ datagen = ImageDataGenerator(
 )
 
 train_data = datagen.flow_from_directory(
-    'dataset', target_size=(224, 224), batch_size=32,
+    image_dir, target_size=(224, 224), batch_size=32,
     class_mode='binary', subset='training'
 )
 
 val_data = datagen.flow_from_directory(
-    'dataset', target_size=(224, 224), batch_size=32,
+    image_dir, target_size=(224, 224), batch_size=32,
     class_mode='binary', subset='validation'
 )
 
@@ -39,5 +43,8 @@ weights = {0: 0.74, 1: 1.54}
 print("Training Vision Model...")
 model.fit(train_data, validation_data=val_data, epochs=10, class_weight=weights)
 
-model.save('vision_model.keras')
-print("Model saved as vision_model.keras")
+# 🚨 FIX: Save directly into the models folder
+os.makedirs("models", exist_ok=True)
+model_path = 'models/vision_model.keras'
+model.save(model_path)
+print(f"✅ Model saved as {model_path}")

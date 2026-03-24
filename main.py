@@ -88,8 +88,15 @@ if scan_clicked:
         st.warning("⚠️ Please provide an email or URL.")
     else:
         with st.spinner("Scanning with AI & Capturing Website..."):
-            image_path = get_screenshot(url_text.strip()) if url_text.strip() else None
-            combined_text = "\n".join(filter(None, [email_text.strip(), url_text.strip()]))
+            image_path = None
+            scraped_text = ""
+            
+            if url_text.strip():
+                capture_result = get_screenshot(url_text.strip())
+                if capture_result:
+                    image_path, scraped_text = capture_result
+
+            combined_text = "\n".join(filter(None, [email_text.strip(), url_text.strip(), scraped_text]))
             report, verdict = analyze_phishing(combined_text, image_path)
 
         v = verdict.strip().upper()
