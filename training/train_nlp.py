@@ -12,7 +12,7 @@ from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 import warnings
 warnings.filterwarnings("ignore")
 
-# Normalize text to lowercase and count URLs as a phishing indicator
+# MAke the text to lowercase and count URLs as a phishing indicator
 def clean_text(text):
     text = str(text).lower()
     urls = len(re.findall(r'https?://[^\s<>"]+|www\.[^\s<>"]+', text))
