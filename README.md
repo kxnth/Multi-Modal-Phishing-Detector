@@ -6,7 +6,7 @@ Modern phishing attacks are sophisticated. A phishing email looks legitimate, an
 ## Project Structure
 ```
 .
-├── .streamlit/               # Streamlit app settings (UI theme, colors, etc.)
+├── .streamlit/               # Streamlit app settings
 ├── dataset/                  # Training data (emails and website screenshots)
 ├── models/                   # Trained models (BERT for text, MobileNetV2 for images)
 ├── training/                 # Scripts to train the models
@@ -16,7 +16,7 @@ Modern phishing attacks are sophisticated. A phishing email looks legitimate, an
 │   ├── capture.py            # Screenshot capture and web scraping
 │   ├── detector.py           # Phishing detection logic
 │   └── evaluate_models.py    # Test model accuracy
-├── main.py                   # Start here! The web app
+├── main.py                   # The web app
 ├── requirements.txt          # Python packages needed
 └── README.md                 # Documentation
 ```
@@ -53,8 +53,6 @@ python training/train_nlp.py       # Train text model
 python training/train_vision.py    # Train image model
 python utils/evaluate_models.py    # Check performance
 ```
-
 ## Model Performance
-- **NLP Model (BERT)** - Fine-tuned on 15,000+ emails. F1-Score: 0.88+ (detects urgency language, spoofed senders, suspicious links)
-- **Vision Model (MobileNetV2)** - Fine-tuned on website screenshots. F1-Score: 0.80+ (identifies cloned layouts and visual deception)
-- **Combined Approach** - Multi-modal ensemble demonstrates improvement over single-model detection, catching phishing attempts that would bypass either detector alone
+- **NLP Model (BERT)** - Fine-tuned on 15,000+ emails. F1-Score: 0.88+
+- **Vision Model (MobileNetV2)** - Fine-tuned on website screenshots. F1-Score: 0.80+
