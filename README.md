@@ -35,7 +35,7 @@ Both models work together to give you a final risk score.
 **1. Install Git LFS (required for large files):**
 ```bash
 choco install git-lfs # Windows 
-brew install git-lfs # Mac (with Homebrew)
+brew install git-lfs # Mac
 ```
 **2. Clone and setup:**
 ```bash
