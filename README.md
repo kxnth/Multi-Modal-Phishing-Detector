@@ -1,7 +1,7 @@
-# Multi-Modal Phishing Detector
-**Catching phishing attacks with text analysis and visual recognition**
+# Multi-Modal Phishing Detector (Email Text + Linked Website Screenshot Analysis)
+**Combining text AI and visual AI to catch phishing from two angles at once**
 
-This is a two-part system that detects phishing attempts:
+This is a two-part detection system that detects phishing attempts:
 1. **Text Analysis:** Uses BERT to analyze email content
 2. **Visual Analysis:** Uses MobileNetV2 to analyze website screenshots
 
