@@ -2,6 +2,8 @@ import pandas as pd
 import torch
 import re
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 import numpy as np
 from sklearn.model_selection import train_test_split
 from transformers import BertTokenizer, BertForSequenceClassification
@@ -10,29 +12,27 @@ from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 import warnings
 warnings.filterwarnings("ignore")
 
-# 1. Preprocessing (Video's Lowercasing + Rubric's URL Extraction)
+# Normalize text to lowercase and count URLs as a phishing indicator
 def clean_text(text):
     text = str(text).lower()
-    # Rubric Requirement: "URL features extracted"
     urls = len(re.findall(r'https?://[^\s<>"]+|www\.[^\s<>"]+', text))
     return f"[urls:{urls}] {text}"
 
-# 2. Dataset Class from the Video
+# Container for tokenized emails and their labels
 class EmailDataset(torch.utils.data.Dataset):
     def __init__(self, encodings, labels):
-        self.encodings = encodings
-        self.labels = labels
+        self.encodings = encodings 
+        self.labels = labels       
         
     def __getitem__(self, idx):
         item = {k: torch.tensor(v[idx]) for k, v in self.encodings.items()}
-        # Forced integer to prevent loss from getting stuck
         item['labels'] = torch.tensor(self.labels[idx], dtype=torch.long)
         return item
 
     def __len__(self):
         return len(self.labels)
 
-# 3. Metrics Function from the Video
+# Calculate model performance metrics: accuracy, precision, recall, and F1 score
 def compute_metrics(pred):
     labels = pred.label_ids
     preds = pred.predictions.argmax(-1)
@@ -46,15 +46,15 @@ def compute_metrics(pred):
     }
 
 def train_tutorial_model():
+    # Load the main dataset and standardize column names
     print("Loading dataset...")
     try:
         df = pd.read_csv("dataset/text/phishing_email.csv")
-        # FIX: Immediately standardize Kaggle's column names
+        
         if 'Email Text' in df.columns:
             df.rename(columns={'Email Text': 'text'}, inplace=True)
         if 'Email Type' in df.columns:
             df.rename(columns={'Email Type': 'label'}, inplace=True)
-            # Convert 'Safe Email' to 0 and 'Phishing Email' to 1 if they are text
             if df['label'].dtype == object:
                 df['label'] = df['label'].apply(lambda x: 1 if 'Phish' in str(x) else 0)
     except FileNotFoundError:
@@ -70,20 +70,19 @@ def train_tutorial_model():
         df_phish['label'] = 1
         df = pd.concat([df_phish, df_safe], ignore_index=True)
 
-    # Failsafe to guarantee 'text' exists before dropping nulls
     if 'text' not in df.columns:
         df.rename(columns={df.columns[0]: 'text'}, inplace=True)
 
+    # Remove empty rows and limit to 15,000 emails
     df.dropna(subset=['text'], inplace=True)
     df['label'] = pd.to_numeric(df['label'], errors='coerce').fillna(0).astype(int)
-
-    # Sample exactly as done in the video
     df = df.sample(n=min(15000, len(df)), random_state=42).reset_index(drop=True)
     
+    # Clean the text using our cleanup function.
     print("Preprocessing text...")
     df['text'] = df['text'].apply(clean_text)
 
-    # 4. Splitting 70/10/20 exactly as in the video
+    # Split the dataset into training (70%), validation (10%), and test (20%) sets
     train_val_texts, test_texts, train_val_labels, test_labels = train_test_split(
         df['text'].tolist(), df['label'].tolist(), test_size=0.2, random_state=42, stratify=df['label']
     )
@@ -91,11 +90,11 @@ def train_tutorial_model():
         train_val_texts, train_val_labels, test_size=0.125, random_state=42, stratify=train_val_labels
     )
 
-    # Save the 20% test set for evaluate_models.py
     os.makedirs("dataset/splits", exist_ok=True)
     pd.DataFrame({"text": test_texts, "label": test_labels}).to_csv("dataset/splits/test_set.csv", index=False)
 
-    print("Tokenizing with BERT-Tiny (Rubric Requirement & Speed Fix)...")
+    # Translate the text into numerical IDs that the AI can process
+    print("Tokenizing with BERT-Tiny...")
     model_name = "prajjwal1/bert-tiny"
     tokenizer = BertTokenizer.from_pretrained(model_name)
     model = BertForSequenceClassification.from_pretrained(model_name, num_labels=2)
@@ -106,18 +105,18 @@ def train_tutorial_model():
     train_dataset = EmailDataset(train_encodings, train_labels)
     val_dataset = EmailDataset(val_encodings, val_labels)
 
-    # 5. Training Arguments from the Video
+    # Setting the instructions for the training process
     training_args = TrainingArguments(
         output_dir='./results_nlp',
-        eval_strategy="epoch",       
+        eval_strategy="epoch",             
         save_strategy="epoch",             
         save_total_limit=2,                
-        learning_rate=2e-5,
-        per_device_train_batch_size=16,
-        per_device_eval_batch_size=16,
-        num_train_epochs=5,
-        weight_decay=0.01,
-        optim="adamw_torch",
+        learning_rate=2e-5,                
+        per_device_train_batch_size=16,    
+        per_device_eval_batch_size=16,     
+        num_train_epochs=5,                
+        weight_decay=0.01,                 
+        optim="adamw_torch",               
         logging_dir='./logs',
         logging_strategy="epoch",          
         load_best_model_at_end=True,       
@@ -134,14 +133,16 @@ def train_tutorial_model():
         compute_metrics=compute_metrics
     )
 
-    print("🚀 Starting Training (This will finish fast)...")
-    trainer.train()
+    # Begin the learning process
+    print("Starting Training...")
+    trainer.train() 
 
+    # Save the finished AI brain to use later.
     print("Saving the Final Model & Tokenizer...")
     os.makedirs("models/nlp_model_bert", exist_ok=True)
     trainer.save_model("models/nlp_model_bert")
     tokenizer.save_pretrained("models/nlp_model_bert")
-    print("✅ Training Complete!")
+    print("Training Complete!")
 
 if __name__ == "__main__":
     train_tutorial_model()

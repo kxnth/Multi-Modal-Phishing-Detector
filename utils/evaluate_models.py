@@ -14,17 +14,19 @@ warnings.filterwarnings("ignore")
 import logging
 logging.getLogger('tensorflow').setLevel(logging.ERROR)
 
+# Normalize text to lowercase and count URLs
 def clean_text(text):
     text = str(text).lower()
     urls = len(re.findall(r'https?://[^\s<>"]+|www\.[^\s<>"]+', text))
     return f"[urls:{urls}] {text}"
 
 def evaluate_nlp():
-    print("--- Evaluating NLP Model (BERT-Tiny Video Approach) ---")
+    # Test the NLP model on held-out test data
+    print("--- Evaluating NLP Model ---")
     
     nlp_path = "models/nlp_model_bert"
     if not os.path.exists(nlp_path):
-        print("❌ Models not found. Run training/train_nlp.py first.")
+        print("Models not found. Run training first.")
         return
 
     tokenizer = BertTokenizer.from_pretrained(nlp_path, local_files_only=True)
@@ -37,7 +39,7 @@ def evaluate_nlp():
     texts = df_test['text'].tolist()
     true_labels = df_test['label'].tolist()
     
-    print("Running Model Inference on 20% Test Set...")
+    print("Running Model Inference on Test Set...")
     model.eval()
     predictions = []
     
@@ -49,7 +51,7 @@ def evaluate_nlp():
             predictions.append(pred)
 
     f1 = f1_score(true_labels, predictions, average='macro')
-    print(f"\n✅ NLP Macro F1 Score: {f1:.4f} (Target: >= 0.88)")
+    print(f"\nNLP Macro F1 Score: {f1:.4f}")
     print("\nClassification Report:")
     print(classification_report(true_labels, predictions, target_names=["Safe", "Phishing"]))
     
@@ -60,10 +62,11 @@ def evaluate_nlp():
     os.makedirs("results", exist_ok=True)
     plt.savefig("results/nlp_confusion_matrix.png")
     plt.close()
-    print("✅ NLP Matrix saved.")
+    print("NLP Matrix saved.")
 
 def evaluate_vision():
-    print("\n--- Evaluating Vision Model (MobileNetV2) ---")
+    # Test the vision model on held-out test data
+    print("\n--- Evaluating Vision Model ---")
     try:
         import tensorflow as tf
         from tensorflow.keras.models import load_model
@@ -83,7 +86,7 @@ def evaluate_vision():
         predictions = (preds_raw > 0.40).astype(int).flatten()
         
         f1 = f1_score(true_labels, predictions)
-        print(f"\n✅ Vision F1 Score: {f1:.4f} (Target: >= 0.80)")
+        print(f"\nVision F1 Score: {f1:.4f}")
         
         print("\nClassification Report:")
         print(classification_report(true_labels, predictions))
@@ -95,11 +98,11 @@ def evaluate_vision():
         os.makedirs("results", exist_ok=True)
         plt.savefig('results/vision_confusion_matrix.png')
         plt.close()
-        print("✅ Vision Matrix saved.")
+        print("Vision Matrix saved.")
         
     except Exception as e:
         print(f"Vision evaluation failed: {e}")
 
 if __name__ == "__main__":
     evaluate_nlp()
-    evaluate_vision()	
+    evaluate_vision()

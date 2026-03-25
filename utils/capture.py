@@ -7,16 +7,16 @@ import time
 def get_screenshot(url):
     image_path = "screenshot.png" 
     
+    # Set up a hidden browser to capture a full-page screenshot
     options = Options()
     options.add_argument("--headless=new")
     options.add_argument("--disable-gpu")
-    
-    # 🚨 FIX 1: High-res 1080p Desktop Window (Prevents squishing/blurriness)
     options.add_argument("--window-size=1920,1080")
-    options.add_argument("--hide-scrollbars") # Keeps the screenshot clean
+    options.add_argument("--hide-scrollbars")
     options.page_load_strategy = 'normal'
     
     try:
+        # Visit the URL and take a screenshot
         service = Service(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service, options=options)
         driver.set_page_load_timeout(10)
@@ -26,10 +26,9 @@ def get_screenshot(url):
             
         driver.get(url)
         time.sleep(2)  
-        
-        # 🚨 FIX 2: Grabs only the top "viewport" (smart crop) natively
         driver.save_screenshot(image_path)
         
+        # Extract all visible text from the page
         try:
             page_text = driver.find_element("tag name", "body").text
         except:
