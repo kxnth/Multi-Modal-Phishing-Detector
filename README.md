@@ -1,91 +1,65 @@
-# Multi-Modal Phishing Detector (Group 5)
-**Combining Text AI and Visual AI to Catch Phishing**
+# Multi-Modal Phishing Detector
+**Catching phishing attacks with text analysis and visual recognition**
 
-Modern phishing attacks are sophisticated enough to bypass simple text filters by using perfectly cloned visual interfaces. This project is a two-part detection system: 
-1. **NLP Component:** Analyzes email text using a fine-tuned BERT model.
-2. **Vision Component:** Analyzes a screenshot of the linked URL using a fine-tuned MobileNetV2 CNN.
+This is a two-part system that detects phishing attempts:
+1. **Text Analysis:** Uses BERT to analyze email content
+2. **Visual Analysis:** Uses MobileNetV2 to analyze website screenshots
 
-Together, they produce a combined phishing confidence score using a smart ensemble veto system.
+Both models work together to give you a final risk score.
 
----
+## Features
+* **Dual AI models** - text and image analysis combined
+* **Web scraping** - automatically captures screenshots of URLs
+* **Web interface** - simple Streamlit app for checking suspicious emails/links
+* **Accurate** - F1 scores of 0.88+ for text, 0.80+ for images
 
-## 🛠️ Features
-* **Multi-Modal AI Fusion:** Combines DistilBERT (Text) and MobileNetV2 (Image) for high-accuracy threat detection.
-* **Smart Ensemble Logic:** Uses a veto-override system (if one model is >85% confident, it overrides the average) to catch edge cases like hidden text or perfect visual clones.
-* **Automated Web Scraping:** Uses Headless Selenium to safely visit URLs, capture screenshots, and scrape hidden DOM text.
-* **Real-time Web UI:** Fully functional Streamlit web application for real-time analysis.
+## Project Structure
 
----
+```
+.
+├── .streamlit/               # Streamlit app settings (UI theme, colors, etc.)
+├── dataset/                  # Training data (emails and website screenshots)
+├── models/                   # Trained models (BERT for text, MobileNetV2 for images)
+├── training/                 # Scripts to train the models
+│   ├── train_nlp.py          # Train the text model
+│   └── train_vision.py       # Train the image model
+├── utils/                    # Core code
+│   ├── capture.py            # Screenshot capture and web scraping
+│   ├── detector.py           # Phishing detection logic
+│   └── evaluate_models.py    # Test model accuracy
+├── main.py                   # Start here! The web app
+├── requirements.txt          # Python packages needed
+└── README.md                 # Documentation
+```
 
-## 📂 Project Structure
-
-phishing_detector_project/
-│
-├── .streamlit/               # Streamlit configuration settings
-│   └── config.toml           # UI styling and theme configuration
-├── dataset/                  # Contains all raw and cleaned training data
-│   ├── images/               # Safe and phishing website screenshots
-│   └── text/                 # Safe and phishing email CSV files
-├── models/                   # Saved AI models and weights
-│   ├── nlp_model_bert/       # Fine-tuned Hugging Face BERT model (Text)
-│   ├── nlp_model.pkl         # Baseline Logistic Regression model (Legacy)
-│   ├── vectorizer.pkl        # TF-IDF vectorizer (Legacy)
-│   └── vision_model.keras    # Fine-tuned MobileNetV2 model (Vision)
-├── results/                  # Evaluation outputs (e.g., vision_confusion_matrix.png)
-├── results_nlp/              # Hugging Face Trainer checkpoints and training logs
-├── screenshots/              # Temporary folder for Selenium to save captured live web pages
-├── training/                 # Scripts specifically for training and isolated evaluation
-│   ├── check_models.py       # API connection check script
-│   ├── evaluate_vision.py    # Isolated evaluation script for the Vision model
-│   ├── train_nlp.py          # Script to fine-tune DistilBERT on the text dataset
-│   └── train_vision.py       # Script to train MobileNetV2 with image data augmentation
-├── utils/                    # Core application logic and data pipelines
-│   ├── capture.py            # Selenium headless browser script to screenshot and scrape text
-│   ├── detector.py           # Core inference engine containing the Ensemble Fusion logic
-│   ├── evaluate_models.py    # Master script to evaluate F1 metrics for both NLP and Vision
-│   ├── fix_dataset.py        # Utility script to clean and rename raw image datasets
-│   └── preprocess.py         # Cleans Kaggle email datasets (strips HTML, formats URLs)
-├── venv/                     # Python virtual environment (Local dependencies)
-├── .env                      # Hidden environment variables (e.g., API keys)
-├── .gitattributes            # Git configuration for handling specific file types
-├── .gitignore                # Tells Git to ignore large files (like /venv and /dataset)
-├── main.py                   # Main Streamlit Web Application (The user interface)
-├── README.md                 # Project documentation
-└── requirements.txt          # Master list of required Python dependencies
-
-## Run Instructions
-**Clone the repository:**
+**1. Clone and setup:**
+```bash
+#Github Link
 git clone https://github.com/kxnth/Multi-Modal-Phishing-Detector
 cd Multi-Modal-Phishing-Detector
+python -m venv venv #Install Virtual Environment
+.\venv\Scripts\activate  # Windows
+source venv/bin/activate  # Mac/Linux
+```
 
-Create venv:
-# Windows
-python -m venv venv
-.\venv\Scripts\activate
-
-# Mac/Linux
-python3 -m venv venv
-source venv/bin/activate
-
-Install dependencies:
+**2. Install and run:**
+```bash
 pip install -r requirements.txt
-
-Run the app:
 streamlit run main.py
+```
 
-OPTIONAL: 
+open http://localhost:8501 in your browser and paste an email or URL to scan.
 
-Generate & Clean the Data (Optional/Setup):
-python utils/preprocess.py
+## Optional: Retraining
 
-Train the Models (Optional/Setup):
-python training/train_nlp.py
-python training/train_vision.py
+If you want to retrain from scratch:
+```bash
+python utils/preprocess.py         # Clean the dataset
+python training/train_nlp.py       # Train text model
+python training/train_vision.py    # Train image model
+python utils/evaluate_models.py    # Check performance
+```
 
-Evaluate the Models (F1-Scores & Metrics):
-python utils/evaluate_models.py
-
-📊 Model Performance
-NLP Model (DistilBERT): F1-Score >= 0.88
-Vision Model (MobileNetV2): F1-Score >= 0.80
-Detailed evaluation metrics and confusion matrices can be found in the /results folder.
+## Model Performance
+- **NLP Model (DistilBERT)/Text model:** ~88% accurate on test data (F1-Score >= 0.88)
+- **Vision Model (MobileNetV2)/Image model:** ~80% accurate on test data (F1-Score >= 0.80)
