@@ -12,7 +12,7 @@ def clean_email_text(raw_text):
     url_pattern = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
     text_clean_urls = re.sub(url_pattern, '[URL]', text_no_html)
     # 3. Clean weird characters
-    clean_text = re.sub(r'\s+', ' ', text_clean_urls)
+    clean_text = re.sub(r'\s+', ' ', text_no_html)
     return clean_text.strip()
 
 # Your specific filenames

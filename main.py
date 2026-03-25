@@ -1,6 +1,14 @@
-import streamlit as st
 import os
+import logging
+
+# --- TENSORFLOW WARNING SUPPRESSION (MUST STAY AT TOP) ---
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+logging.getLogger('tensorflow').setLevel(logging.ERROR)
+
+import streamlit as st
 import base64
+import re
 
 st.set_page_config(page_title="PhishGuard AI", layout="centered", initial_sidebar_state="collapsed")
 
@@ -96,14 +104,22 @@ if scan_clicked:
                 if capture_result:
                     image_path, scraped_text = capture_result
 
+            # Combine user input with any text scraped from the URL
             combined_text = "\n".join(filter(None, [email_text.strip(), url_text.strip(), scraped_text]))
+            
+            # All logic (BERT NLP + MobileNet Vision + Bayesian Fusion) is now inside analyze_phishing
             report, verdict = analyze_phishing(combined_text, image_path)
 
+        # UI Color Formatting based on Verdict
         v = verdict.strip().upper()
-        if "SAFE" in v: bg_color, border = "#eaffea", "#2ecc71"
-        elif "SUSPICIOUS" in v: bg_color, border = "#fff8e1", "#f39c12"
-        else: bg_color, border = "#ffebee", "#e74c3c"
+        if "SAFE" in v: 
+            bg_color, border = "#eaffea", "#2ecc71"
+        elif "SUSPICIOUS" in v: 
+            bg_color, border = "#fff8e1", "#f39c12"
+        else: 
+            bg_color, border = "#ffebee", "#e74c3c"
 
+        # Render Results Box
         st.markdown(f"""
         <div style="background: {bg_color}; border: 1px solid {border}; border-left: 8px solid {border}; border-radius: 8px; padding: 15px; margin-bottom: 20px; color: #000; text-align: left;">
             <div style="font-weight: bold; font-size: 1.1rem; margin-bottom: 5px;">{verdict}</div>
@@ -111,6 +127,7 @@ if scan_clicked:
         </div>
         """, unsafe_allow_html=True)
 
+        # Render Screenshot Preview
         img_html = '<div style="height: 300px; background: #ffffff;"></div>'
         if image_path and os.path.exists(image_path):
             with open(image_path, "rb") as img_file:

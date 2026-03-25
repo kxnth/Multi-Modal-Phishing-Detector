@@ -10,8 +10,11 @@ def get_screenshot(url):
     options = Options()
     options.add_argument("--headless=new")
     options.add_argument("--disable-gpu")
-    options.add_argument("--window-size=1280,720")
-    options.page_load_strategy = 'normal' # Better for getting text
+    
+    # 🚨 FIX 1: High-res 1080p Desktop Window (Prevents squishing/blurriness)
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument("--hide-scrollbars") # Keeps the screenshot clean
+    options.page_load_strategy = 'normal'
     
     try:
         service = Service(ChromeDriverManager().install())
@@ -24,16 +27,16 @@ def get_screenshot(url):
         driver.get(url)
         time.sleep(2)  
         
+        # 🚨 FIX 2: Grabs only the top "viewport" (smart crop) natively
         driver.save_screenshot(image_path)
         
-        # 🚨 NEW: Grab the text from the website for the NLP model!
         try:
             page_text = driver.find_element("tag name", "body").text
         except:
             page_text = ""
             
         driver.quit()
-        return image_path, page_text # Return both!
+        return image_path, page_text
         
     except Exception as e:
         print(f"Error capturing URL: {e}")
