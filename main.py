@@ -26,7 +26,6 @@ html, body, [data-testid="stAppViewContainer"], .main, .block-container {
     padding: 20px !important;
 }
 
-/* Strips all nested backgrounds from both inputs so they match perfectly */
 div[data-baseweb="input"], div[data-baseweb="input"] * ,
 div[data-baseweb="base-input"], div[data-baseweb="base-input"] * ,
 div[data-baseweb="textarea"], div[data-baseweb="textarea"] * ,
@@ -38,7 +37,6 @@ div[data-baseweb="textarea"], div[data-baseweb="textarea"] * ,
     box-shadow: none !important;
 }
 
-/* Reapplies the clean border to the main wrappers */
 .stTextInput > div > div, .stTextArea > div > div,
 .stTextInput, .stTextArea {
     border: 1px solid #4a7c82 !important;
@@ -47,7 +45,6 @@ div[data-baseweb="textarea"], div[data-baseweb="textarea"] * ,
     background-color: transparent !important;
 }
 
-/* Forces the placeholder text to be white instead of default black */
 ::placeholder, input::placeholder, textarea::placeholder {
     color: #ffffff !important;
     opacity: 0.7 !important;
@@ -58,12 +55,11 @@ div[data-baseweb="base-input"]:focus-within,
 div[data-baseweb="textarea"]:focus-within,
 .stTextInput input:focus, 
 .stTextArea textarea:focus {
-    border-color: #2ecc71 !important; /* Light Green */
+    border-color: #2ecc71 !important;
     box-shadow: none !important;
     outline: none !important;
 }
 
-/* FIX: Hides the "Press Enter to apply" text completely */
 [data-testid="InputInstructions"] {
     display: none !important;
 }
@@ -93,25 +89,24 @@ with st.form("scan_form"):
             </div>
         </summary>
         <div style="margin-top: 15px;">
-            <div style="font-size: 1.1rem; font-weight: bold; margin-bottom: 8px;">Scan an Email</div>
+            <div style="font-size: 1.1rem; font-weight: bold; margin-bottom: 8px;">✉️ Scan an Email</div>
             <div style="font-size: 0.9rem; color: #e0e0e0; line-height: 1.5; margin-bottom: 15px;">* Open your email message<br>* Copy the full email content (or suspicious part)<br>* Paste it into the "Check Email" box<br>* Click "Scan using AI"<br>* Wait for the result</div>
-            <div style="font-size: 1.1rem; font-weight: bold; margin-bottom: 8px;">Scan a Link / URL</div>
+            <div style="font-size: 1.1rem; font-weight: bold; margin-bottom: 8px;">🔗 Scan a Link / URL</div>
             <div style="font-size: 0.9rem; color: #e0e0e0; line-height: 1.5; margin-bottom: 25px;">* Copy the link (URL) you want to check<br>* Paste it into the "Check Link / URL" field<br>* Click "Scan using AI"</div>
         </div>
     </details>
     """, unsafe_allow_html=True)
 
-    st.markdown('Check Email (suspicious message)')
+    st.markdown('✉️Check Email (suspicious message)')
     email_text = st.text_area("email", label_visibility="collapsed", height=100, placeholder="Input at least 50 characters...")
     
-    st.markdown('Check Link / URL')
-    # FIX: Removed the columns wrapper so it takes up the full width, matching the email box perfectly
+    st.markdown('🔗Check Link / URL')
     url_text = st.text_input("url", label_visibility="collapsed")
     
     st.markdown('<br>', unsafe_allow_html=True) 
     col1, col2, col3 = st.columns([1, 1.5, 1])
     with col2:
-        scan_clicked = st.form_submit_button("Scan using AI", use_container_width=True)
+        scan_clicked = st.form_submit_button("⚙️ Scan using AI", use_container_width=True)
 
 if scan_clicked:
     email_val = email_text.strip()
@@ -120,21 +115,20 @@ if scan_clicked:
     email_err = ""
     url_err = ""
 
-    # 1. Check Email (Empty vs Short)
+    # Validate email: must not be empty and at least 50 characters
     if not email_val:
         email_err = "⚠️ Please input an email message to scan."
     elif len(email_val) < 50:
         email_err = "⚠️ Email is too short. Please input at least 50 characters."
 
-    # 2. Check URL (Forgiving check: must have a dot and be at least 4 characters long)
+    # Validate URL: must be at least 15 characters and contain a dot
     if not url_val:
         url_err = "⚠️ Please input a Link / URL to scan."
-    elif len(url_val) < 4 or "." not in url_val:
+    elif len(url_val) < 15 or "." not in url_val:
         url_err = "⚠️ This is an invalid link. Try again."
 
-    # 3. Handle Errors
+    # Display validation errors and highlight invalid fields
     if email_err or url_err:
-        # We add IDs so our Javascript can find and delete them instantly
         error_html = '<div id="phish-error-box" style="background-color: rgba(255, 51, 51, 0.2); border: 2px solid #ff3333; color: #ff3333; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-weight: bold;">'
         dynamic_css = '<style id="phish-error-style">'
         
@@ -153,7 +147,7 @@ if scan_clicked:
         st.markdown(error_html, unsafe_allow_html=True)
         st.markdown(dynamic_css, unsafe_allow_html=True)
 
-        # 🚨 THE INSTANT UX FIX: Hidden Javascript that watches your keyboard and deletes the errors immediately
+        # Clear errors when user starts typing
         import streamlit.components.v1 as components
         components.html("""
         <script>
@@ -176,7 +170,7 @@ if scan_clicked:
         """, height=0, width=0)
             
     else:
-        # Both fields are completely valid, proceed with the scan!
+        # Scan is valid, proceed with analysis
         with st.spinner("Scanning with AI & Capturing Website..."):
             image_path = None
             scraped_text = ""
@@ -211,8 +205,9 @@ if scan_clicked:
             img_html = f'<img src="data:image/png;base64,{b64_str}" style="width: 100%; display: block; border-radius: 0 0 8px 8px;">'
 
         st.markdown(f"""
-        <div style="background: #ffffff; border-radius: 10px; padding: 20px; overflow: hidden;">
-            <div style="font-weight: 600; font-size: 1.4rem; color: #124549; margin-bottom: 15px; letter-spacing: 0.5px;">Sample Webpage Screenshot (AI simulated preview)</div>
+        <div style="background: #ffffff; border: 1px solid #4a7c82; border-radius: 8px; color: #000; overflow: hidden;">
+            <div style="padding: 10px; font-weight: bold; font-size: 0.9rem; text-align: left; color: #09515C;">Sample Webpage Screenshot (AI simulated preview)</div>
+            <div style="border-bottom: 2px solid #09515C; width: 97%; margin: 0 auto 12px auto;"></div>
             {img_html}
         </div>
         """, unsafe_allow_html=True)
