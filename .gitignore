@@ -1,11 +1,12 @@
 venv/
+data/
 models/
 dataset/
 results/
-data/
 __pycache__/
+results_nlp/
+screenshots/
 *.pkl
 *.keras
 *.png
-results_nlp/
 .env

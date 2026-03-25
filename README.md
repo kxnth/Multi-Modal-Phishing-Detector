@@ -32,17 +32,23 @@ Both models work together to give you a final risk score.
 └── README.md                 # Documentation
 ```
 
-**1. Clone and setup:**
+**1. Install Git LFS (required for large files):**
 ```bash
-#Github Link
+choco install git-lfs # Windows 
+brew install git-lfs # Mac (with Homebrew)
+```
+**2. Clone and setup:**
+```bash
+#Github Link/Cloning
 git clone https://github.com/kxnth/Multi-Modal-Phishing-Detector
 cd Multi-Modal-Phishing-Detector
+####
+git lfs pull
 python -m venv venv #Install Virtual Environment
 .\venv\Scripts\activate  # Windows
 source venv/bin/activate  # Mac/Linux
 ```
-
-**2. Install and run:**
+**3. Install and run:**
 ```bash
 pip install -r requirements.txt
 streamlit run main.py

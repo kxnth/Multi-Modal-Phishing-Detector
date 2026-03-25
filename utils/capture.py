@@ -3,9 +3,11 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import time
+import os
 
 def get_screenshot(url):
-    image_path = "screenshot.png" 
+    os.makedirs("screenshots", exist_ok=True)
+    image_path = "screenshots/screenshot.png" 
     
     # Set up a hidden browser to capture a full-page screenshot
     options = Options()

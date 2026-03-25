@@ -59,8 +59,8 @@ def evaluate_nlp():
     plt.figure(figsize=(6,5))
     sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=["Safe", "Phishing"], yticklabels=["Safe", "Phishing"])
     plt.title("NLP Model Confusion Matrix")
-    os.makedirs("results", exist_ok=True)
-    plt.savefig("results/nlp_confusion_matrix.png")
+    os.makedirs("results_nlp", exist_ok=True)
+    plt.savefig("results_nlp/nlp_confusion_matrix.png")
     plt.close()
     print("NLP Matrix saved.")
 
@@ -95,8 +95,8 @@ def evaluate_vision():
         plt.figure(figsize=(6,5))
         sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=['Safe', 'Phishing'], yticklabels=['Safe', 'Phishing'])
         plt.title('Vision Model Confusion Matrix')
-        os.makedirs("results", exist_ok=True)
-        plt.savefig('results/vision_confusion_matrix.png')
+        os.makedirs("results_nlp", exist_ok=True)
+        plt.savefig('results_nlp/vision_confusion_matrix.png')
         plt.close()
         print("Vision Matrix saved.")
         
