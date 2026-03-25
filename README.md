@@ -1,5 +1,6 @@
 # Multi-Modal Phishing Detector (Email Text + Linked Website Screenshot Analysis)
 **Combining text AI and visual AI to catch phishing from two angles at once**
+
 Modern phishing attacks are sophisticated. A phishing email looks legitimate, and the linked website looks like a perfect copy of your bank's login page. This project builds a **two-part detection system** that analyzes emails and websites simultaneously:
 
 1. **NLP Analysis** - Uses BERT to detect suspicious language patterns, urgency triggers, and spoofed sender techniques
