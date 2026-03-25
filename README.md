@@ -6,8 +6,6 @@ Modern phishing attacks are sophisticated. A phishing email looks legitimate, an
 1. **NLP Analysis** - Uses BERT to detect suspicious language patterns, urgency triggers, and spoofed sender techniques
 2. **Vision Analysis** - Uses MobileNetV2 to identify cloned layouts and visual deception
 
-When combined, they produce a **single confidence score** — like two security experts comparing notes to catch what one might miss alone.
-
 ## Project Structure
 ```
 .
