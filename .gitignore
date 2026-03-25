@@ -8,3 +8,4 @@ __pycache__/
 *.keras
 *.png
 results_nlp/
+.env
