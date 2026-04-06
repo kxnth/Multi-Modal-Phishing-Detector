@@ -3,11 +3,6 @@
 **Multi-Modal Phishing Detector (Email Text + Linked Website Screenshot Analysis)**  
 **Combining text AI and visual AI to catch phishing from two angles at once**
 
-Modern phishing attacks are sophisticated. A phishing email looks legitimate, and the linked website looks like a perfect copy of your bank's login page. This project builds a **two-part detection system** that analyzes emails and websites simultaneously:
-
-1. **NLP Analysis** - Uses BERT to detect suspicious language patterns, urgency triggers, and spoofed sender techniques.
-2. **Vision Analysis** - Uses MobileNetV2 to identify cloned layouts and visual deception.
-
 ## Project Structure
 
 ```
@@ -58,7 +53,7 @@ These are the foundational tools required for machine learning on a fresh Window
 
 - Link: https://www.python.org/downloads/release/python-3119/
 - Installation: Scroll to the bottom files table and download the Windows installer (64-bit).  
-  Crucial Step: On the very first screen of the installer, you must check the box that says "Add python.exe to PATH" before clicking Install.
+  Important Step: On the very first screen of the installer, you must check the box that says "Add python.exe to PATH" before clicking Install.
 
 *(Note: Always restart VS Code completely after installing these so the terminal recognizes them).*
 
