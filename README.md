@@ -3,11 +3,11 @@
 
 Modern phishing attacks are sophisticated. A phishing email looks legitimate, and the linked website looks like a perfect copy of your bank's login page. This project builds a **two-part detection system** that analyzes emails and websites simultaneously:
 
-1. **NLP Analysis** - Uses BERT to detect suspicious language patterns, urgency triggers, and spoofed sender techniques
-2. **Vision Analysis** - Uses MobileNetV2 to identify cloned layouts and visual deception
+1. **NLP Analysis** - Uses BERT to detect suspicious language patterns, urgency triggers, and spoofed sender techniques.
+2. **Vision Analysis** - Uses MobileNetV2 to identify cloned layouts and visual deception.
 
 ## Project Structure
-```
+```text
 .
 ├── .streamlit/               # Streamlit app settings
 ├── dataset/                  # Training data (emails and website screenshots)
@@ -22,40 +22,97 @@ Modern phishing attacks are sophisticated. A phishing email looks legitimate, an
 ├── main.py                   # The web app
 ├── requirements.txt          # Python packages needed
 └── README.md                 # Documentation
-```
 
-**1. Install Git LFS (required for large files):**
-```bash
-choco install git-lfs # Windows 
-brew install git-lfs # Mac
-```
-**2. Clone and setup:**
-```bash
-#Github Link/Cloning
-git clone https://github.com/kxnth/Multi-Modal-Phishing-Detector
+Datasets Used
+To comply with repository size limits, the datasets are not hosted directly in this repository. Please download them from Kaggle using the links below:
+
+Alam, N. A. (2024). Phishing Email Dataset [Data set]. Kaggle. https://www.kaggle.com/datasets/naserabdullahalam/phishing-email-dataset
+
+Zac, Z. (n.d.). Phishing sites screenshot [Data set]. Kaggle. https://www.kaggle.com/datasets/zackyzac/phishing-sites-screenshot
+
+pooriamst. (n.d.). Website Screenshots [Data set]. Kaggle. https://www.kaggle.com/datasets/pooriamst/website-screenshots
+
+Installation & Setup Guide
+Phase 1: Core Software Installation
+These are the foundational tools required for machine learning on a fresh Windows PC.
+
+Git (for downloading code and models)
+
+Link: https://git-scm.com/download/win
+
+Installation: Download the 64-bit setup and click "Next" through all the default options.
+
+Python 3.11 (The AI Industry Standard)
+
+Link: https://www.python.org/downloads/release/python-3119/
+
+Installation: Scroll to the bottom files table and download the Windows installer (64-bit). 
+Crucial Step: On the very first screen of the installer, you must check the box that says "Add python.exe to PATH" before clicking Install.
+
+(Note: Always restart VS Code completely after installing these so the terminal recognizes them).
+
+Phase 2: Project Setup & Environment
+Open VS Code, open a New Terminal (Ctrl + ~), and run these commands one by one to download the project and isolate the dependencies.
+
+Bash
+# 1. Create a Projects folder and enter it
+mkdir Projects
+cd Projects
+
+# 2. Download the code
+git clone [https://github.com/kxnth/Multi-Modal-Phishing-Detector](https://github.com/kxnth/Multi-Modal-Phishing-Detector)
 cd Multi-Modal-Phishing-Detector
-####
-git lfs pull
-python -m venv venv #Install Virtual Environment
-.\venv\Scripts\activate  # Windows
-source venv/bin/activate  # Mac/Linux
-```
-**3. Install and run:**
-```bash
+
+# 3. Create a fresh Python virtual environment
+python -m venv venv 
+
+# 4. Activate the environment (Type 'A' if Windows asks for permission)
+.\venv\Scripts\activate
+
+# 5. Install all the necessary AI libraries (TensorFlow, Streamlit, etc.)
 pip install -r requirements.txt
-streamlit run main.py
-```
+Phase 3: The Datasets
+To rebuild the data that was ignored by GitHub, create the following folders manually inside your project:
 
-open http://localhost:8501 in your browser and paste an email or URL to scan.
+/data/text/
 
-## Optional: Retraining
-If you want to retrain from scratch:
-```bash
-python utils/preprocess.py         # Clean the dataset
-python training/train_nlp.py       # Train text model
-python training/train_vision.py    # Train image model
-python utils/evaluate_models.py    # Check performance
-```
-## Model Performance
-- **NLP Model (BERT)** - Fine-tuned on 15,000+ emails. F1-Score: 0.88+
-- **Vision Model (MobileNetV2)** - Fine-tuned on website screenshots. F1-Score: 0.80+
+/data/images/safe/
+
+/data/images/phishing/
+
+The Image Datasets:
+
+Phishing Images: Download the Phishing sites screenshot dataset by zackyzac on Kaggle. Extract the malicious website screenshots into your dataset/images/phishing/ folder.
+
+Safe Images: Download the Website Screenshots dataset by pooriamst on Kaggle. Extract these legitimate website screenshots into your dataset/images/safe/ folder.
+
+The Text Datasets: * Place your safe_email.csv, phishing_emails.csv, and phishing_email.csv files directly into the dataset/text/ folder.
+
+Phase 4: Fixing Data & Retraining
+Kaggle datasets contain hidden .webp files and nested subfolders that TensorFlow ignores. You must run the Deep Scan script to extract and convert thousands of images into readable .jpg files.
+
+Bash
+# 1. Install the image conversion tool
+pip install Pillow
+
+# 2. Run the deep scan to fix the Kaggle images
+python src/utils/fix_dataset.py
+(Wait for the terminal to confirm it has found and converted the 3,600+ Safe images and 650+ Phishing images).
+
+Now that the AI can read the data, retrain the models:
+
+Bash
+# 3. Train the Vision Model (MobileNetV2)
+python src/training/train_vision.py
+
+# 4. Train the Text Model (BERT)
+python src/training/train_nlp.py
+
+Phase 5: Launch the Application
+With the environment built, the data cleaned, and the models trained to a high F1 score, launch the final web interface:
+
+Bash
+streamlit run src/main.py
+Model Performance
+NLP Model (BERT) - Fine-tuned on 15,000+ emails. F1-Score: 0.88+
+Vision Model (MobileNetV2) - Fine-tuned on website screenshots. F1-Score: 0.80+

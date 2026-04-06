@@ -2,6 +2,8 @@ import pandas as pd
 import torch
 import re
 import os
+os.environ['CURL_CA_BUNDLE'] = ''
+os.environ['REQUESTS_CA_BUNDLE'] = ''
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 import numpy as np
@@ -49,7 +51,7 @@ def train_tutorial_model():
     # Load the main dataset and standardize column names
     print("Loading dataset...")
     try:
-        df = pd.read_csv("dataset/text/phishing_email.csv")
+        df = pd.read_csv("data/text/phishing_email.csv")
         
         if 'Email Text' in df.columns:
             df.rename(columns={'Email Text': 'text'}, inplace=True)
@@ -58,8 +60,8 @@ def train_tutorial_model():
             if df['label'].dtype == object:
                 df['label'] = df['label'].apply(lambda x: 1 if 'Phish' in str(x) else 0)
     except FileNotFoundError:
-        df_safe = pd.read_csv("dataset/text/safe_email.csv")
-        df_phish = pd.read_csv("dataset/text/phishing_emails.csv")
+        df_safe = pd.read_csv("data/text/safe_email.csv")
+        df_phish = pd.read_csv("data/text/phishing_emails.csv")
         
         for d in [df_safe, df_phish]:
             if 'Email Text' in d.columns: d.rename(columns={'Email Text': 'text'}, inplace=True)
@@ -90,8 +92,8 @@ def train_tutorial_model():
         train_val_texts, train_val_labels, test_size=0.125, random_state=42, stratify=train_val_labels
     )
 
-    os.makedirs("dataset/splits", exist_ok=True)
-    pd.DataFrame({"text": test_texts, "label": test_labels}).to_csv("dataset/splits/test_set.csv", index=False)
+    os.makedirs("data/splits", exist_ok=True)
+    pd.DataFrame({"text": test_texts, "label": test_labels}).to_csv("data/splits/test_set.csv", index=False)
 
     # Translate the text into numerical IDs that the AI can process
     print("Tokenizing with BERT-Tiny...")

@@ -1,5 +1,5 @@
 import os
-base_path = 'dataset/images'
+base_path = 'data/images'
 categories = ['safe', 'phishing']
 
 # Rename all images with a consistent naming scheme to avoid loading issues

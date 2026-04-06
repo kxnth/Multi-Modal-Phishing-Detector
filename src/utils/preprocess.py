@@ -14,9 +14,9 @@ def clean_email_text(raw_text):
     clean_text = re.sub(r'\s+', ' ', text_clean_urls)
     return clean_text.strip()
 
-safe_csv = "dataset/text/safe_email.csv"
-phishing_csv = "dataset/text/phishing_emails.csv"
-output_csv = "dataset/text/cleaned_emails.csv"
+safe_csv = "data/text/safe_email.csv"
+phishing_csv = "data/text/phishing_emails.csv"
+output_csv = "data/text/cleaned_emails.csv"
 
 if os.path.exists(safe_csv) and os.path.exists(phishing_csv):
     print("Loading data...")

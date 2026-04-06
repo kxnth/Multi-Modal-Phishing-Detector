@@ -32,7 +32,7 @@ def evaluate_nlp():
     tokenizer = BertTokenizer.from_pretrained(nlp_path, local_files_only=True)
     model = BertForSequenceClassification.from_pretrained(nlp_path, local_files_only=True)
 
-    test_split_path = "dataset/splits/test_set.csv"
+    test_split_path = "data/splits/test_set.csv"
     df_test = pd.read_csv(test_split_path)
     
     df_test['text'] = df_test['text'].apply(clean_text)
@@ -72,7 +72,7 @@ def evaluate_vision():
         from tensorflow.keras.models import load_model
         
         test_data = tf.keras.utils.image_dataset_from_directory(
-            'dataset/images', 
+            'data/images', 
             image_size=(224, 224), 
             batch_size=32, 
             label_mode='binary', 
