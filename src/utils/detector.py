@@ -55,6 +55,10 @@ def analyze_phishing(combined_text, image_path):
     else:
         combined_score = nlp_prob
 
+    # If either model is highly confident (>95%), instant flagged as phishing
+    if nlp_prob > 0.95 or vision_prob > 0.95:
+        combined_score = max(nlp_prob, vision_prob)
+
     # Classify the merged score as PHISHING, SUSPICIOUS, or SAFE
     if combined_score > 0.80:
         verdict = "🚨 PHISHING DETECTED"
