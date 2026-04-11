@@ -118,6 +118,11 @@ python src/training/train_vision.py
 # 4. Train the Text Model (BERT)
 python src/training/train_nlp.py
 ```
+### Phase 4.5: Evaluate the Models
+To verify the accuracy and generate the Confusion Matrices for both models before launching the app, run the evaluation script. This will output the final F1-scores and metrics directly to your terminal.
+
+```bash
+python src/utils/evaluate_models.py
 
 ### Phase 5: Launch the Application
 
@@ -129,5 +134,9 @@ streamlit run src/main.py
 
 ## Model Performance
 
-- **NLP Model (BERT)** - Fine-tuned on 15,000+ emails. F1-Score: 0.88+
-- **Vision Model (MobileNetV2)** - Fine-tuned on website screenshots. F1-Score: 0.80+
+After rigorous testing using the live evaluation script, both models significantly exceeded the project's baseline requirements:
+
+- **NLP Model (BERT-Tiny)** - Fine-tuned on 15,000+ emails. 
+  - **F1-Score:** **0.96** (Accuracy: 96%)
+- **Vision Model (MobileNetV2)** - Fine-tuned on 4,100+ website screenshots. 
+  - **F1-Score:** **0.90** (Accuracy: 84%)

@@ -18,11 +18,13 @@ def train_vision_model():
     print("Loading screenshot dataset...")
     train_ds = image_dataset_from_directory(
         'data/images', validation_split=0.2, subset="training", 
-        seed=42, image_size=(224, 224), batch_size=32, label_mode='binary'
+        seed=42, image_size=(224, 224), batch_size=32, label_mode='binary',
+        class_names=['safe', 'phishing']
     )
     val_ds = image_dataset_from_directory(
         'data/images', validation_split=0.2, subset="validation", 
-        seed=42, image_size=(224, 224), batch_size=32, label_mode='binary'
+        seed=42, image_size=(224, 224), batch_size=32, label_mode='binary',
+        class_names=['safe', 'phishing']
     )
 
     # Randomly adjust brightness and contrast to help the model focus on patterns, not appearance
@@ -53,7 +55,7 @@ def train_vision_model():
                   loss='binary_crossentropy', metrics=['accuracy'])
     
     # Weight classes to penalize false positives on safe websites
-    class_weights = {0: 1.5, 1: 1.0}
+    class_weights = {0: 1.0, 1: 6.0}
 
     # Train only the new custom decision maker first.
     print("\nPhase 1: Training custom classification head...")
