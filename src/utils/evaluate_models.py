@@ -83,7 +83,7 @@ def evaluate_vision():
         true_labels = np.concatenate([y for x, y in test_data], axis=0).flatten()
         preds_raw = model.predict(test_data)
         
-        predictions = (preds_raw > 0.40).astype(int).flatten()
+        predictions = (preds_raw > 0.20).astype(int).flatten()
         
         f1 = f1_score(true_labels, predictions)
         print(f"\nVision F1 Score: {f1:.4f}")

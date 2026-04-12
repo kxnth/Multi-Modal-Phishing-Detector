@@ -17,7 +17,6 @@ from transformers import BertTokenizer, BertForSequenceClassification
 nlp_path = "models/nlp_model_bert"
 tokenizer = BertTokenizer.from_pretrained(nlp_path)
 nlp_model = BertForSequenceClassification.from_pretrained(nlp_path)
-nlp_model.eval()
 
 vision_model = load_model("models/vision_model.keras")
 
@@ -28,6 +27,9 @@ def clean_text(text):
     return f"[urls:{urls}] {text}"
 
 def analyze_phishing(combined_text, image_path):
+    # 1. FIX NLP BOUNCING: Force evaluation mode right before predicting so Streamlit doesn't reset it
+    nlp_model.eval()
+    
     # Get phishing probability from the text model
     cleaned_text = clean_text(combined_text)
     inputs = tokenizer(cleaned_text, return_tensors="pt", truncation=True, max_length=256, padding=True)
@@ -45,7 +47,7 @@ def analyze_phishing(combined_text, image_path):
         img_array = np.expand_dims(img_array, axis=0)
         
         raw_vision = float(vision_model.predict(img_array, verbose=0)[0][0])
-        vision_prob = raw_vision ** 2 
+        vision_prob = 1.0 - raw_vision
 
     # Merge text and image scores using Bayesian reasoning
     if vision_prob > 0:
@@ -54,6 +56,9 @@ def analyze_phishing(combined_text, image_path):
         combined_score = numerator / denominator if denominator != 0 else 1.0
     else:
         combined_score = nlp_prob
+
+    if nlp_prob > 0.95 or vision_prob > 0.95:
+        combined_score = max(nlp_prob, vision_prob)
 
     # Classify the merged score as PHISHING, SUSPICIOUS, or SAFE
     if combined_score > 0.80:
